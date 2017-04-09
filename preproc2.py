@@ -19,10 +19,8 @@ def cpandrenameimages():
             newfile = "E" + str(emodict[key]) + "--" + fname.split('.')[0] + "." + (fname.split('.')[1]).strip()
             shutil.copyfile(f, os.path.join(DATA_DIR, newfile))
 
-
-
-
 cpandrenameimages()
+
 
 
 
