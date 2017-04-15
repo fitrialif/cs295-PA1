@@ -1,4 +1,3 @@
-import deXpression as dX
 import crossvalidation as CV
 
 import tensorflow as tf
@@ -21,9 +20,19 @@ conv3c = tf.layers.conv2d(inputs=pool3a, filters=64, kernel_size=(1, 1), strides
 concat3 = tf.concat([conv3b, conv3c])
 pool3b = tf.layers.max_pooling2d(inputs=concat3, pool_size=(3, 3), strides=(2, 2), padding='valid')
 
-W = dX.weight_variable((None, 7))
-b = dX.bias_variable((None, 7))
-y = dX.classifier(pool3b, W, b)
+def weight_variable(shape):
+    initial = tf.truncated_normal(shape=shape, stdev=0.1)
+    return tf.Variable(initial)
+
+
+def bias_variable(shape):
+    initial = tf.constant(0.1, shape=shape)
+    return tf.Variable(initial)
+
+
+W = weight_variable((None, 7))
+b = bias_variable((None, 7))
+y = tf.matmul(x, W) + b
 
 cv = CV.NFoldCV(10)
 sess = tf.InteractiveSession()
