@@ -20,6 +20,26 @@ conv3b = dX.conv3b(conv3a)
 conv3c = dX.conv3c(pool3a)
 concat3 = dX.concat3(conv3b, conv3c)
 pool3b = dX.pool3b(concat3)
+W = dX.weight_variable(())
+b = dX.bias_variable(())
+y = dX.classifier(pool3b, W, b)
+
+cv = CV.NFoldCV(10)
+sess = tf.InteractiveSession()
+
+cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(laels=y_, logits=y))
+train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+sess.run(tf.global_variables_initializer())
+
+for i in range(20000):
+    for j in range(10):
+          batchx, batchy = cv.getNextBatch()
+          train_step.run(feed_dict={x:batchx,y:batchy})
+
+print ("Done")
+
 
 
 

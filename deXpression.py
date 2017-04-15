@@ -67,3 +67,17 @@ def concat3(x,y):
 
 def pool3b(x):
     return tf.layers.max_pooling2d(x, pool_size=(), strides=(), padding='valid')
+
+
+def weight_variable(shape):
+    initial = tf.truncated_normal(shape=shape, stdev=0.1)
+    return tf.Variable(initial)
+
+
+def bias_variable(shape):
+    initial  = tf.constant(0.1, shape=shape)
+    return tf.Variable(initial)
+
+
+def classifier(x, W, b):
+     return tf.matmul(x,W) +b
