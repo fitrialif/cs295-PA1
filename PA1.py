@@ -2,12 +2,12 @@ import crossvalidation as CV
 import tensorflow as tf
 import sys
 
-x = tf.placeholder(tf.float32, shape=(1, 224, 224, 1))
+x = tf.placeholder(tf.uint8, shape=(1, 224, 224, 1))
 print "x:{}".format(x)
-y_ = tf.placeholder(tf.float32, shape=[1, 7])
+y_ = tf.placeholder(tf.uint8, shape=[1, 7])
 print "y_:{}".format(y_)
 
-conv1 = tf.layers.conv2d(inputs=x, filters=64, kernel_size=(7, 7), strides=(2, 2), padding='same', name='conv1')
+conv1 = tf.layers.conv2d(inputs=tf.cast(x,dtype=tf.float32), filters=64, kernel_size=(7, 7), strides=(2, 2), padding='same', name='conv1')
 print "conv1:{}".format(conv1)
 
 pool1 = tf.layers.max_pooling2d(conv1, pool_size=(3, 3), strides=(2, 2), padding='same', name='pool1')
@@ -62,12 +62,11 @@ def weight_variable(shape):
 def bias_variable(shape):
     initial = tf.constant(0.1, shape=shape)
     return tf.Variable(initial)
-
-y = tf.layers.dense(inputs=pool3b, units=7, name='classifier')
+reshaped = tf.reshape(pool3b, shape=(1, 272*14*14), name='reshaped')
+print "reshaped:{}".format(reshaped)
+y = tf.layers.dense(inputs=reshaped, units=7, name='ouput')
 print "y:{}".format(y)
 
-y1 = tf.layers.dense(inputs=y, units=10, name='y1')
-print "y1:{}".format(y1)
 sys.exit(0)
 cv = CV.NFoldCV(10)
 sess = tf.InteractiveSession()
