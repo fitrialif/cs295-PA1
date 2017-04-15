@@ -29,7 +29,7 @@ class NFoldCV(object):
 
 
     def getBatch(self,index):
-        pass
+        return self.folds[index], self.trainsets[index]
 
     def getStats(self):
         print "File Count is {}. Some files are listed below:".format(self.count)
