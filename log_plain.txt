@@ -1,0 +1,106 @@
+x:Tensor("x:0", shape=(1, 224, 224, 1), dtype=uint8)
+y_:Tensor("y_:0", shape=(1, 7), dtype=uint8)
+conv1:Tensor("conv1/BiasAdd:0", shape=(1, 112, 112, 64), dtype=float32)
+pool1:Tensor("pool1/MaxPool:0", shape=(1, 56, 56, 64), dtype=float32)
+lrn1:Tensor("lrn1:0", shape=(1, 56, 56, 64), dtype=float32)
+conv2a:Tensor("conv2a/BiasAdd:0", shape=(1, 56, 56, 96), dtype=float32)
+conv2b:Tensor("conv2b/BiasAdd:0", shape=(1, 56, 56, 208), dtype=float32)
+pool2a:Tensor("pool2a/MaxPool:0", shape=(1, 56, 56, 64), dtype=float32)
+conv2c:Tensor("conv2c/BiasAdd:0", shape=(1, 56, 56, 64), dtype=float32)
+concat2:Tensor("concat2:0", shape=(1, 56, 56, 272), dtype=float32)
+pool2b:Tensor("pool2b/MaxPool:0", shape=(1, 28, 28, 272), dtype=float32)
+conv3a:Tensor("conv3a/BiasAdd:0", shape=(1, 28, 28, 96), dtype=float32)
+pool3a:Tensor("pool3a/MaxPool:0", shape=(1, 28, 28, 272), dtype=float32)
+conv3b:Tensor("conv3b/BiasAdd:0", shape=(1, 28, 28, 208), dtype=float32)
+conv3c:Tensor("conv3c/BiasAdd:0", shape=(1, 28, 28, 64), dtype=float32)
+concat3:Tensor("concat3:0", shape=(1, 28, 28, 272), dtype=float32)
+pool3b:Tensor("pool3b/MaxPool:0", shape=(1, 14, 14, 272), dtype=float32)
+reshaped:Tensor("reshaped:0", shape=(1, 53312), dtype=float32)
+y:Tensor("ouput/BiasAdd:0", shape=(1, 7), dtype=float32)
+2017-04-17 13:54:26.444343: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2017-04-17 13:54:26.444361: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+Starting: 13:54:26
+2017-04-17 13:54:26.541611: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-04-17 13:54:26.541882: I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 0 with properties: 
+name: GeForce GTX 960
+major: 5 minor: 2 memoryClockRate (GHz) 1.291
+pciBusID 0000:01:00.0
+Total memory: 3.94GiB
+Free memory: 3.63GiB
+2017-04-17 13:54:26.541894: I tensorflow/core/common_runtime/gpu/gpu_device.cc:906] DMA: 0 
+2017-04-17 13:54:26.541898: I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 0:   Y 
+2017-04-17 13:54:26.541908: I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX 960, pci bus id: 0000:01:00.0)
+@ 13:54:34: Run#:0, Fold#:0
+acc:80.27
+@ 13:55:36: Run#:0, Fold#:1
+acc:91.16
+@ 13:56:39: Run#:0, Fold#:2
+acc:96.26
+@ 13:57:41: Run#:0, Fold#:3
+acc:95.92
+@ 13:58:43: Run#:0, Fold#:4
+acc:97.45
+@ 13:59:46: Run#:0, Fold#:5
+acc:99.66
+@ 14:00:48: Run#:0, Fold#:6
+acc:98.98
+@ 14:01:51: Run#:0, Fold#:7
+acc:98.47
+@ 14:02:53: Run#:0, Fold#:8
+acc:99.83
+@ 14:03:56: Run#:0, Fold#:9
+acc:99.83
+ave acc:95.782
+@ 14:04:59: Run#:1, Fold#:0
+acc:92.86
+@ 14:06:02: Run#:1, Fold#:1
+acc:99.32
+@ 14:07:04: Run#:1, Fold#:2
+acc:98.47
+@ 14:08:07: Run#:1, Fold#:3
+acc:98.13
+@ 14:09:10: Run#:1, Fold#:4
+acc:98.81
+@ 14:10:12: Run#:1, Fold#:5
+acc:98.98
+@ 14:11:15: Run#:1, Fold#:6
+acc:99.66
+@ 14:12:18: Run#:1, Fold#:7
+acc:100.00
+@ 14:13:21: Run#:1, Fold#:8
+acc:99.83
+@ 14:14:23: Run#:1, Fold#:9
+acc:98.64
+ave acc:98.469
+@ 14:15:26: Run#:2, Fold#:0
+acc:99.66
+@ 14:16:28: Run#:2, Fold#:1
+acc:98.98
+@ 14:17:31: Run#:2, Fold#:2
+acc:94.90
+@ 14:18:33: Run#:2, Fold#:3
+acc:100.00
+@ 14:19:36: Run#:2, Fold#:4
+acc:98.81
+@ 14:20:38: Run#:2, Fold#:5
+acc:99.83
+@ 14:21:41: Run#:2, Fold#:6
+acc:99.15
+@ 14:22:44: Run#:2, Fold#:7
+acc:100.00
+@ 14:23:46: Run#:2, Fold#:8
+acc:100.00
+@ 14:24:48: Run#:2, Fold#:9
+acc:100.00
+ave acc:99.133
+@ 14:25:51: Run#:3, Fold#:0
+acc:100.00
+@ 14:26:53: Run#:3, Fold#:1
+acc:100.00
+@ 14:27:56: Run#:3, Fold#:2
+acc:100.00
+@ 14:28:58: Run#:3, Fold#:3
+acc:99.83
+@ 14:30:01: Run#:3, Fold#:4
+acc:100.00
+@ 14:31:04: Run#:3, Fold#:5
