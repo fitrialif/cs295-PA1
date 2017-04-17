@@ -32,8 +32,8 @@ class NFoldCV(object):
     def getBatch(self,index):
         # self.folds[index] contains the filenames for the validation set
         # self.trainsets[index] contains the rest of the dataset filenames(less the validation set)
-        vdata, vlabels = utils.filestoTensors(self.folds[index])
-        tdata, tlabels = utils.filestoTensors(self.trainsets[index])
+        vdata, vlabels = utils.filestoTFdata(self.folds[index])
+        tdata, tlabels = utils.filestoTFdata(self.trainsets[index])
         return vdata, vlabels, tdata, tlabels
 
     def getStats(self):

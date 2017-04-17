@@ -1,10 +1,12 @@
 import crossvalidation as CV
 import tensorflow as tf
 import sys
+import time
 
-x = tf.placeholder(tf.uint8, shape=(1, 224, 224, 1))
+
+x = tf.placeholder(tf.uint8, shape=(1, 224, 224, 1), name="x")
 print "x:{}".format(x)
-y_ = tf.placeholder(tf.uint8, shape=[1, 7])
+y_ = tf.placeholder(tf.uint8, shape=(1, 7), name="y_")
 print "y_:{}".format(y_)
 
 conv1 = tf.layers.conv2d(inputs=tf.cast(x,dtype=tf.float32), filters=64, kernel_size=(7, 7), strides=(2, 2), padding='same', name='conv1')
@@ -67,24 +69,25 @@ print "reshaped:{}".format(reshaped)
 y = tf.layers.dense(inputs=reshaped, units=7, name='ouput')
 print "y:{}".format(y)
 
-cv = CV.NFoldCV(10)
-sess = tf.InteractiveSession()
-
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+######################################################### Running starts here#####
+cv = CV.NFoldCV(10)
+print "Starting: {}".format(time.strftime("%H:%M:%S"))
+sess = tf.InteractiveSession()
+
 sess.run(tf.global_variables_initializer())
 
 for k in range(10):
     for j in range(10):
-        vset, tset, vlabels, tlabels = cv.getBatch(j)
-        print "Run#{}, Fold#{}".format(k, j)
+        vset, vlabels, tset, tlabels = cv.getBatch(j)
+        print "@ {}: Run#:{}, Fold#:{}".format(time.strftime("%H:%M:%S"), k, j)
         for i in range(len(tset)):
-            train_step.run(feed_dict={x: tset[i], y: tlabels[i]})
-            print conv1
-            print pool1
-        print "Validation Accuracy:{}".format(accuracy.eval(feed_dict={x:vset, y: vlabels}))
+            train_step.run(feed_dict={x: tset[i], y_: tlabels[i]})
+
+        #print "Validation Accuracy:{}".format(accuracy.eval(feed_dict={x:vset, y_: vlabels}))
 
 print ("Done")
 
