@@ -81,14 +81,21 @@ sess = tf.InteractiveSession()
 sess.run(tf.global_variables_initializer())
 
 for k in range(10):
+    ave_acc = 0
     for j in range(10):
         vset, vlabels, tset, tlabels = cv.getBatch(j)
         print "@ {}: Run#:{}, Fold#:{}".format(time.strftime("%H:%M:%S"), k, j)
         for i in range(len(tset)):
             train_step.run(feed_dict={x: tset[i], y_: tlabels[i]})
+        acc=0
+        for i in range(len(vset)):
+            acc += accuracy.eval(feed_dict={x: vset[i], y_: vlabels[i]})
 
-        #print "Validation Accuracy:{}".format(accuracy.eval(feed_dict={x:vset, y_: vlabels}))
+        print ("acc:{:00.2f}".format(acc/len(vset)*100))
+        ave_acc += (acc/len(vset)*100)
 
+    ave_acc = ave_acc/10
+    print ("ave acc:{:00.3f}".format(ave_acc))
 print ("Done")
 
 
