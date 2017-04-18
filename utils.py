@@ -26,14 +26,14 @@ def filestoTFdata(files):
         img = cv2.imread(f, cv2.IMREAD_GRAYSCALE)
         # expand to that expected
         expanded_img = np.expand_dims(np.expand_dims(img,0),3)
-        convert to numpy array
+        # convert to numpy array
         image = np.array(expanded_img)
         # add to list
         images.append(image)
     # return lists of images and labels
     return images, labels
 
-
+# test the function above
 if __name__== "__main__":
     filelist = ['../data/resized/E3--S060_005_00000011.png']
     images, labels = filestoTFdata(filelist)
