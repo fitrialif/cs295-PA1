@@ -1,6 +1,7 @@
 import crossvalidation as cv
 import tensorflow as tf
 import time
+import numpy as np
 
 ############################
 # Create the network/ graph according to paper.
@@ -14,7 +15,7 @@ with tf.name_scope("Inputs"):
 
 
 conv1 = tf.layers.conv2d(inputs=tf.cast(x, dtype=tf.float32), filters=64, kernel_size=(7, 7), strides=(2, 2),
-                         padding='same', activation=tf.nn.relu, name='conv1')
+                         padding='same',  name='conv1')
 print "conv1:{}".format(conv1)
 
 pool1 = tf.layers.max_pooling2d(conv1, pool_size=(3, 3), strides=(2, 2), padding='same', name='pool1')
@@ -27,12 +28,12 @@ with tf.name_scope("Feat_Ex_1"):
     conv2a = tf.layers.conv2d(inputs=lrn1, filters=96, kernel_size=(1, 1), strides=(1, 1),
                               padding='same', name='conv2a')
     print "conv2a:{}".format(conv2a)
-    conv2b = tf.layers.conv2d(inputs=conv2a, filters=208, kernel_size=(3, 3), strides=(1, 1), activation=tf.nn.relu,
+    conv2b = tf.layers.conv2d(inputs=conv2a, filters=208, kernel_size=(3, 3), strides=(1, 1),
                               padding='same', name='conv2b')
     print "conv2b:{}".format(conv2b)
     pool2a = tf.layers.max_pooling2d(lrn1, pool_size=(3, 3), strides=(1, 1),  padding='same', name='pool2a')
     print "pool2a:{}".format(pool2a)
-    conv2c = tf.layers.conv2d(inputs=pool2a, filters=64, kernel_size=(1, 1), strides=(1, 1), activation=tf.nn.relu,
+    conv2c = tf.layers.conv2d(inputs=pool2a, filters=64, kernel_size=(1, 1), strides=(1, 1),
                               padding='same', name='conv2c')
     print "conv2c:{}".format(conv2c)
     concat2 = tf.concat([conv2b, conv2c], axis=3, name='concat2')
@@ -41,15 +42,15 @@ with tf.name_scope("Feat_Ex_1"):
     print "pool2b:{}".format(pool2b)
 
 with tf.name_scope("Feat_Ex_2"):
-    conv3a = tf.layers.conv2d(inputs=pool2b, filters=96, kernel_size=(1, 1), strides=(1, 1), activation=tf.nn.relu,
+    conv3a = tf.layers.conv2d(inputs=pool2b, filters=96, kernel_size=(1, 1), strides=(1, 1),
                               padding='same', name='conv3a')
     print "conv3a:{}".format(conv3a)
     pool3a = tf.layers.max_pooling2d(inputs=pool2b, pool_size=(3, 3), strides=(1, 1), padding='same', name='pool3a')
     print "pool3a:{}".format(pool3a)
-    conv3b = tf.layers.conv2d(inputs=conv3a, filters=208, kernel_size=(3, 3), strides=(1, 1), activation=tf.nn.relu,
+    conv3b = tf.layers.conv2d(inputs=conv3a, filters=208, kernel_size=(3, 3), strides=(1, 1),
                               padding='same', name='conv3b')
     print "conv3b:{}".format(conv3b)
-    conv3c = tf.layers.conv2d(inputs=pool3a, filters=64, kernel_size=(1, 1), strides=(1, 1), activation=tf.nn.relu,
+    conv3c = tf.layers.conv2d(inputs=pool3a, filters=64, kernel_size=(1, 1), strides=(1, 1),
                               padding='same', name='conv3c')
     print "conv3c:{}".format(conv3c)
     concat3 = tf.concat([conv3b, conv3c], axis=3, name='concat3')
@@ -58,9 +59,9 @@ with tf.name_scope("Feat_Ex_2"):
     print "pool3b:{}".format(pool3b)
 
 # Dropout Layer
-#with tf.name_scope("Dropout"):
-#    keep_prob = tf.placeholder(tf.float32, name="Keep_Prob")
-#    h_drop = tf.nn.dropout(pool3b, keep_prob, name='Dropout')
+with tf.name_scope("Dropout"):
+    keep_prob = tf.placeholder(tf.float32, name="Keep_Prob")
+    h_drop = tf.nn.dropout(pool3b, keep_prob, name='Dropout')
 
 with tf.name_scope("Classifier"):
     def weight_variable(shape):
@@ -71,17 +72,20 @@ with tf.name_scope("Classifier"):
     def bias_variable(shape):
         initial = tf.constant(0.1, shape=shape)
         return tf.Variable(initial)
+    # Reshape incoming multidimensional tensor to be flat,
+    # so we can create a fully connected layer with just 1 dimension
     reshaped = tf.reshape(pool3b, shape=(1, 272*14*14), name='reshaped')
     print "reshaped:{}".format(reshaped)
-    y = tf.layers.dense(inputs=reshaped, units=7, name='ouput')
+    y = tf.layers.dense(inputs=reshaped, units=7, name='y')
     print "y:{}".format(y)
 
 cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 tf.summary.scalar("cross_entropy", cross_entropy)
 
 train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
-correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+prediction = tf.argmax(y,1)
+#correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+#accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 
 # ######################################################## Running starts here#####
@@ -89,10 +93,11 @@ accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 f10cv = cv.NFoldCV(10)
 print "Starting: {}".format(time.strftime("%H:%M:%S"))
 sess = tf.InteractiveSession()
-
+kp = 1.00
 sess.run(tf.global_variables_initializer())
 merged_summary = tf.summary.merge_all()
-writer = tf.summary.FileWriter("./temp/PA1a/relu/base")
+
+writer = tf.summary.FileWriter("./temp/PA1a/norelu/base")
 writer.add_graph(sess.graph)
 
 # run for 10 epochs
@@ -113,13 +118,23 @@ for k in range(1):
             writer.add_summary(s, j*10+i)
         acc = 0
         # test
+        conflog = open("conf{}.log".format(j), "w")
         for i in range(len(vset)):
             # for each data point in the validation set, feed into network, check accuracy
             # accuracy will either be "1.0" or "0.0" depending if the label matches the output
-            acc += accuracy.eval(feed_dict={x: vset[i], y_: vlabels[i]})
-        acc = acc/len(vset)
+            pred = prediction.eval(feed_dict={x: vset[i], y_: vlabels[i]})
+
+            p = int(pred[0])
+            label = int(np.argmax(vlabels[i]))
+
+            if p == label:
+                acc +=1
+            conflog.write("{}\t{}\t{}\n".format(p, label, "correct" if p == label else "incorrect"))
+        acc = acc*1.0/len(vset)
         # get and print the average across the validation set
         print ("acc:{:00.2f}".format(acc*100))
+        conflog.write("acc:{:00.2f}\n".format(acc*100))
+        conflog.close()
 
         # accumulate the accuracies to measure the average for this epoch
         ave_acc += acc
