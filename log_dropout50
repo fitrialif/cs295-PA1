@@ -1,0 +1,54 @@
+x:Tensor("Inputs/x:0", shape=(1, 224, 224, 1), dtype=uint8)
+y_:Tensor("Inputs/y_:0", shape=(1, 7), dtype=uint8)
+conv1:Tensor("conv1/BiasAdd:0", shape=(1, 112, 112, 64), dtype=float32)
+pool1:Tensor("pool1/MaxPool:0", shape=(1, 56, 56, 64), dtype=float32)
+lrn1:Tensor("lrn1:0", shape=(1, 56, 56, 64), dtype=float32)
+conv2a:Tensor("Feat_Ex_1/conv2a/BiasAdd:0", shape=(1, 56, 56, 96), dtype=float32)
+conv2b:Tensor("Feat_Ex_1/conv2b/BiasAdd:0", shape=(1, 56, 56, 208), dtype=float32)
+pool2a:Tensor("Feat_Ex_1/pool2a/MaxPool:0", shape=(1, 56, 56, 64), dtype=float32)
+conv2c:Tensor("Feat_Ex_1/conv2c/BiasAdd:0", shape=(1, 56, 56, 64), dtype=float32)
+concat2:Tensor("Feat_Ex_1/concat2:0", shape=(1, 56, 56, 272), dtype=float32)
+pool2b:Tensor("Feat_Ex_1/pool2b/MaxPool:0", shape=(1, 28, 28, 272), dtype=float32)
+conv3a:Tensor("Feat_Ex_2/conv3a/BiasAdd:0", shape=(1, 28, 28, 96), dtype=float32)
+pool3a:Tensor("Feat_Ex_2/pool3a/MaxPool:0", shape=(1, 28, 28, 272), dtype=float32)
+conv3b:Tensor("Feat_Ex_2/conv3b/BiasAdd:0", shape=(1, 28, 28, 208), dtype=float32)
+conv3c:Tensor("Feat_Ex_2/conv3c/BiasAdd:0", shape=(1, 28, 28, 64), dtype=float32)
+concat3:Tensor("Feat_Ex_2/concat3:0", shape=(1, 28, 28, 272), dtype=float32)
+pool3b:Tensor("Feat_Ex_2/pool3b/MaxPool:0", shape=(1, 14, 14, 272), dtype=float32)
+reshaped:Tensor("Classifier/reshaped:0", shape=(1, 53312), dtype=float32)
+y:Tensor("Classifier/ouput/BiasAdd:0", shape=(1, 7), dtype=float32)
+Starting: 15:32:17
+2017-04-18 15:32:17.232804: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.1 instructions, but these are available on your machine and could speed up CPU computations.
+2017-04-18 15:32:17.232819: W tensorflow/core/platform/cpu_feature_guard.cc:45] The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.
+2017-04-18 15:32:17.329678: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:901] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2017-04-18 15:32:17.329956: I tensorflow/core/common_runtime/gpu/gpu_device.cc:885] Found device 0 with properties: 
+name: GeForce GTX 960
+major: 5 minor: 2 memoryClockRate (GHz) 1.291
+pciBusID 0000:01:00.0
+Total memory: 3.94GiB
+Free memory: 3.55GiB
+2017-04-18 15:32:17.329968: I tensorflow/core/common_runtime/gpu/gpu_device.cc:906] DMA: 0 
+2017-04-18 15:32:17.329972: I tensorflow/core/common_runtime/gpu/gpu_device.cc:916] 0:   Y 
+2017-04-18 15:32:17.329977: I tensorflow/core/common_runtime/gpu/gpu_device.cc:975] Creating TensorFlow device (/gpu:0) -> (device: 0, name: GeForce GTX 960, pci bus id: 0000:01:00.0)
+@ 01:52:07: Run#:0, Fold#:0
+acc:75.00
+@ 01:53:30: Run#:0, Fold#:1
+acc:92.52
+@ 01:54:52: Run#:0, Fold#:2
+acc:94.22
+@ 01:56:13: Run#:0, Fold#:3
+acc:96.09
+@ 01:57:36: Run#:0, Fold#:4
+acc:98.81
+@ 01:58:57: Run#:0, Fold#:5
+acc:98.13
+@ 02:00:19: Run#:0, Fold#:6
+acc:97.79
+@ 02:01:41: Run#:0, Fold#:7
+acc:99.49
+@ 02:03:02: Run#:0, Fold#:8
+acc:99.32
+@ 02:04:24: Run#:0, Fold#:9
+acc:99.66
+ave acc:95.101
+Done

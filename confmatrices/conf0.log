@@ -1,0 +1,6 @@
+\begin{table}[]
+\centering
+\caption{My-Caption}
+\label{My-Label}
+\begin{tabular}{llllllll}
+	 & \multicolumn{7}{1}{labels}	 & anger & contempt & disgust & fear & happiness & sadness & surprise \\
