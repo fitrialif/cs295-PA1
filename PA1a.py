@@ -93,11 +93,12 @@ prediction = tf.argmax(y,1)
 f10cv = cv.NFoldCV(10)
 print "Starting: {}".format(time.strftime("%H:%M:%S"))
 sess = tf.InteractiveSession()
-kp = 1.00
+kp = 0.50
+print "Keep Prob={}".format(kp)
 sess.run(tf.global_variables_initializer())
 merged_summary = tf.summary.merge_all()
 
-writer = tf.summary.FileWriter("./temp/PA1a/norelu/base")
+writer = tf.summary.FileWriter("./temp/PA1a/norelu/do{}".format(kp*100))
 writer.add_graph(sess.graph)
 
 # run for 10 epochs
@@ -113,16 +114,16 @@ for k in range(1):
         # training
         for i in range(len(tset)):
             # for each data point in the trainingset, feed into network
-            train_step.run(feed_dict={x: tset[i], y_: tlabels[i] })
-            s = sess.run(merged_summary, feed_dict={x: tset[i], y_: tlabels[i]})
+            train_step.run(feed_dict={x: tset[i], y_: tlabels[i], keep_prob: kp })
+            s = sess.run(merged_summary, feed_dict={x: tset[i], y_: tlabels[i], keep_prob:kp})
             writer.add_summary(s, j*10+i)
         acc = 0
         # test
-        conflog = open("conf{}.log".format(j), "w")
+        conflog = open("conf{}_do{}.log".format(j,kp*100), "w")
         for i in range(len(vset)):
             # for each data point in the validation set, feed into network, check accuracy
             # accuracy will either be "1.0" or "0.0" depending if the label matches the output
-            pred = prediction.eval(feed_dict={x: vset[i], y_: vlabels[i]})
+            pred = prediction.eval(feed_dict={x: vset[i], y_: vlabels[i], keep_prob:1.00})
 
             p = int(pred[0])
             label = int(np.argmax(vlabels[i]))

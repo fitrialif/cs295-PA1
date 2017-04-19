@@ -28,7 +28,7 @@ def writeconfm(confm, sfile):
         sf.write("\\caption{My-Caption}\n")
         sf.write("\\label{My-Label}\n")
         sf.write("\\begin{tabular}{llllllll}\n")
-        sf.write("\t & \\multicolumn{7}{1}{labels}")
+        sf.write("\t & \\multicolumn{7}{1}{labels}\n")
         sf.write("\t & anger & contempt & disgust & fear & happiness & sadness & surprise \\\\")
 
 def main():
