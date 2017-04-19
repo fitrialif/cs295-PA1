@@ -93,7 +93,7 @@ prediction = tf.argmax(y,1)
 f10cv = cv.NFoldCV(10)
 print "Starting: {}".format(time.strftime("%H:%M:%S"))
 sess = tf.InteractiveSession()
-kp = 0.50
+kp = 0.25
 print "Keep Prob={}".format(kp)
 sess.run(tf.global_variables_initializer())
 merged_summary = tf.summary.merge_all()
